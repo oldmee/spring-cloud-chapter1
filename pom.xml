@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.oldmee</groupId>
+    <artifactId>spring-cloud-chapter1</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging> <!--所有的父级项目的packaging都为pom-->
+
+    <name>spring-cloud-chapter1</name>
+    <description>Demo project for spring boot</description>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.0.3.RELEASE</version>
+        <!--查找顺序：relativePath元素中的地址–本地仓库–远程仓库
+        <relativePath/>设定一个空值将始终从本地仓库-远程仓库中获取，不从本地路径获取-->
+        <relativePath/>
+    </parent>
+
+    <modules>
+        <module>eureka-server</module>
+        <module>service-hi</module>
+    </modules>
+
+    <!--定义一些参数常量给下文调用的-->
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> <!--系统默认可识别-->
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding> <!--无法默认识别-->
+        <java.version>1.8</java.version> <!--无法默认识别-->
+        <spring-cloud.version>Finchley.RELEASE</spring-cloud.version> <!--无法默认识别-->
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <!--scope主要管理依赖的部署，目前<scope>可以使用5个值:
+            * compile，缺省值，适用于所有阶段，会随着项目一起发布。
+            * provided，类似compile，期望JDK、容器或使用者会提供这个依赖。如servlet.jar。
+            * runtime，只在运行时使用，如JDBC驱动，适用运行和测试阶段。
+            * test，只在测试时使用，用于编译和运行测试代码。不会随项目发布。
+            * system，类似provided，需要显式提供包含依赖的jar，Maven不会在Repository中查找它。-->
+            <!--<scope>test</scope>-->
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-dependencies</artifactId>
+            <version>${spring-cloud.version}</version>
+            <type>pom</type>
+        </dependency>
+    </dependencies>
+
+
+    <!-- dependencyManagement只是对版本进行管理，不会实际引入jar 如果dependencies里的dependency自己没有声明version元素，那么maven就
+         会倒dependencyManagement里面去找有没有对该artifactId和groupId进行过版本声明，如果有，就继承它，如果
+         没有就会报错，告诉你必须为dependency声明一个version -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <!-- <type>ejb</type>就是告诉maven使用maven ejb plugin来处理。如果想知道ejb plugin如何处理这类dependency，
+                     那就去查查ejb plugin的详细说明吧，这个plugin的说明网上有很多。url:https://blog.csdn.net/ywb201314/article/details/69569191?utm_source=blogxgwz6 -->
+                <type>pom</type>
+                <!--<scope>import</scope>-->
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+
+    <!--一种<build>被称为Project Build，即是<project>的直接子元素。
+        另一种<build>被称为Profile Build，即是<profile>的直接子元素。-->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+
+</project>
